@@ -6,7 +6,7 @@ namespace Mougrim\Hello\Controller;
  */
 class Site extends \SF\Controller {
 	public function actionIndex() {
-		echo "index";
+		echo "hellow world";
 	}
 
 	public function actionError() {

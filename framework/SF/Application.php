@@ -24,6 +24,30 @@ class Application extends Factory {
 		\SF::addAutoLoadPath($this->basePath . '/app');
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNamespace()
+	{
+		return $this->namespace;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDefaultRoute()
+	{
+		return $this->defaultRoute;
+	}
+
 	protected function processRequest() {
 		try {
 			$route = $this->getRequest()->getPathInfo();
@@ -60,8 +84,7 @@ class Application extends Factory {
 			$action = $parts[1];
 		}
 
-		$controller = ucfirst($controller);
-		$controllerClassName = "\\{$this->id}\\Controller\\{$controller}";
+		$controllerClassName = "\\{$this->id}\\Controller\\" . ucfirst($controller);
 		if($this->namespace) {
 			$controllerClassName = "\\{$this->namespace}{$controllerClassName}";
 		}
