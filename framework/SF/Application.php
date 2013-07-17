@@ -21,7 +21,7 @@ class Application extends Factory {
 			$this->$property = $value;
 		}
 
-		\SF::addAutoLoadPath($this->basePath . '/app');
+		\SF::addAutoLoadPath($this->basePath . '/application');
 	}
 
 	/**
@@ -46,6 +46,14 @@ class Application extends Factory {
 	public function getDefaultRoute()
 	{
 		return $this->defaultRoute;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getBasePath()
+	{
+		return $this->basePath;
 	}
 
 	protected function processRequest() {

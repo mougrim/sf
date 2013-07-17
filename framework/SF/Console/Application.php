@@ -13,7 +13,7 @@ class Application extends \SF\Application {
 		if(empty($args)) {
 			$args = $this->getDefaultRoute();
 		}
-		list($commandName, $action, $config) = $this->resolveRequest($args);var_dump($commandName, $action, $config);
+		list($commandName, $action, $config) = $this->resolveRequest($args);
 		$commandName = preg_replace('/[^\w]/', '', $commandName);
 		$commandClassName = "\\{$this->getId()}\\Command\\" . ucfirst($commandName);
 		if($this->getNamespace()) {

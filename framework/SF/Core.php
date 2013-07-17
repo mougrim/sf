@@ -36,8 +36,8 @@ class Core {
 	 * @throws Exception
 	 */
 	public static function app() {
-		if(!is_null(self::$application)) {
-			throw new Exception("Application is created");
+		if(is_null(self::$application)) {
+			throw new Exception("Application not created");
 		}
 
 		return self::$application;
