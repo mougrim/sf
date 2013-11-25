@@ -1,36 +1,39 @@
 <?php
 namespace SF\Console;
 
+use SF\Application as BaseApplication;
+use SF\Exception;
+
 /**
  * @author Mougrim <rinat@mougrim.ru>
  */
-class Application extends \SF\Application {
+class Application extends BaseApplication {
 	private $_scriptName;
 
 	protected function processRequest() {
-		$args = $_SERVER['argv'];
+		$args              = $_SERVER['argv'];
 		$this->_scriptName = array_shift($args);
 		if(empty($args)) {
 			$args = $this->getDefaultRoute();
 		}
 		list($commandName, $action, $config) = $this->resolveRequest($args);
-		$commandName = preg_replace('/[^\w]/', '', $commandName);
+		$commandName      = preg_replace('/[^\w]/', '', $commandName);
 		$commandClassName = "\\{$this->getId()}\\Command\\" . ucfirst($commandName);
 		if($this->getNamespace()) {
 			$commandClassName = "\\{$this->getNamespace()}{$commandClassName}";
 		}
 		if(!class_exists($commandClassName)) {
-			throw new \SF\Exception("Command {$commandName} not found");
+			throw new Exception("Command {$commandName} not found");
 		}
 		/** @var $command Command */
-		$command = new $commandClassName($commandName);
+		$command = new $commandClassName($this, $commandName);
 		$command->run($action, $config);
 	}
 
 	protected function resolveRequest($args) {
 		$command = null;
-		$action = null;
-		$config = array();
+		$action  = null;
+		$config  = array();
 
 		foreach($args as $param) {
 			if(preg_match('/^--([a-z\d](?:[a-z\d-]*[a-z\d])?)(?:=(.+))?$/i', $param, $matches)) {
@@ -40,11 +43,11 @@ class Application extends \SF\Application {
 					$config[$matches[1]] = true;
 				}
 			} elseif($command === null) {
-				$command    = $param;
+				$command = $param;
 			} elseif($action === null) {
-				$action     = $param;
+				$action = $param;
 			} else {
-				$config[]   = $param;
+				$config[] = $param;
 			}
 		}
 
