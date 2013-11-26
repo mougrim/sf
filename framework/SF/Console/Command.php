@@ -8,11 +8,11 @@ use SF\Exception;
  */
 abstract class Command {
 	protected $defaultAction = 'index';
-	protected $action;
 	protected $config;
 	protected $configParams = array();
 	private $application;
 	private $id;
+	private $actionId;
 
 	public function __construct(Application $application, $id) {
 		$this->application = $application;
@@ -30,16 +30,20 @@ abstract class Command {
 		return $this->id;
 	}
 
-	public function run($action, array $config) {
-		$this->action = $action;
-		if(!$this->action) {
-			$this->action = $this->defaultAction;
+	public function getActionId() {
+		return $this->actionId;
+	}
+
+	public function run($actionId, array $config) {
+		$this->actionId = $actionId;
+		if(!$this->actionId) {
+			$this->actionId = $this->defaultAction;
 		}
-		$this->action = preg_replace('/[^\w]/', '', $this->action);
+		$this->actionId = preg_replace('/[^\w]/', '', $this->actionId);
 		$this->config = $config;
-		$methodName   = 'action' . ucfirst($this->action);
+		$methodName   = 'action' . ucfirst($this->actionId);
 		if(!method_exists($this, $methodName)) {
-			throw new Exception("Action '{$this->action}' not found");
+			throw new Exception("Action '{$this->actionId}' not found");
 		}
 		$this->$methodName();
 	}
